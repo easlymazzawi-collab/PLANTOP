@@ -386,173 +386,251 @@
     </section>
 
     <section id="platform" class="panel">
-      <div class="plat-layout">
-        <div class="plat-stats" id="plat-stats"></div>
-
-        <nav class="plat-nav">
-          <button type="button" class="active" data-plat="cfg">Cấu hình</button>
-          <button type="button" data-plat="bots">Bots (10)</button>
-          <button type="button" data-plat="archive">Archive</button>
-          <button type="button" data-plat="vip">VIP & Stars</button>
-          <button type="button" data-plat="gift">Giftcode</button>
-          <button type="button" data-plat="ads">Ads</button>
-          <button type="button" data-plat="contrib">Đóng góp <span class="badge-count" id="plat-contrib-badge" style="display:none"></span></button>
-          <button type="button" data-plat="share">Share</button>
-          <button type="button" data-plat="users">Users</button>
-          <button type="button" data-plat="rollup">Rollup</button>
-        </nav>
-
-        <div id="plat-pane-cfg" class="plat-pane active">
-          <div class="card">
-            <h2>Research Platform — Cấu hình</h2>
-            <p class="hint">3 lớp ON/OFF độc lập · config lưu <code>data/auto_config.json → platform.*</code></p>
-            <label><input type="checkbox" id="plat-enabled" /> Bật Research Platform</label>
-            <div class="row" style="margin-top:0.5rem">
-              <label><input type="checkbox" id="plat-orchestrator" checked /> Orchestrator queue</label>
-              <label><input type="checkbox" id="plat-channel-first" checked /> Kênh trước → bot sau</label>
-            </div>
-            <div class="row" style="margin-top:0.5rem">
-              <label><input type="checkbox" id="plat-publish" /> Up kênh (global)</label>
-              <label><input type="checkbox" id="plat-index" /> Archive index</label>
-              <label><input type="checkbox" id="plat-delivery" /> Bot delivery</label>
-            </div>
-            <div class="row">
-              <label><input type="checkbox" id="plat-vip-req" /> Bắt buộc VIP xem archive</label>
-              <label><input type="checkbox" id="plat-auto-pub" checked /> Tự publish sau index</label>
-            </div>
-            <div class="row">
-              <div><label>Delay gửi bot (giây)</label><input id="plat-delay" type="number" step="0.5" min="0.5" value="1" /></div>
-              <div><label>Admin notify group</label><input id="plat-notify-group" type="number" placeholder="-100..." /></div>
-            </div>
-            <div class="row">
-              <div><label>Admin forum ID</label><input id="plat-admin-forum" type="number" /></div>
-              <div><label>Topic ZIP backup</label><input id="plat-zip-topic" type="number" /></div>
-              <div><label>Topic duyệt tên</label><input id="plat-contrib-topic" type="number" /></div>
-            </div>
-            <div class="row">
-              <div><label>Membership channel ID</label><input id="plat-mem-ch" type="number" /></div>
-              <div><label>@channel username</label><input id="plat-mem-un" placeholder="mychannel" /></div>
-              <div><label>Check TTL (giây)</label><input id="plat-mem-sec" type="number" min="60" value="300" /></div>
-            </div>
-            <label>Force-join message</label>
-            <textarea id="plat-mem-msg" rows="2"></textarea>
-            <div class="row">
-              <div><label>Backup forum ID</label><input id="plat-backup-forum" type="number" /></div>
-              <div><label>Interval (giờ)</label><input id="plat-backup-hours" type="number" min="1" value="24" /></div>
-              <div><label>Giữ (ngày)</label><input id="plat-backup-keep" type="number" min="1" value="7" /></div>
-            </div>
-            <label><input type="checkbox" id="plat-backup-tg" checked /> Gửi backup lên Telegram</label>
-            <p class="hint" id="plat-backup-status">Backup: —</p>
-            <h3 style="font-size:0.9rem;margin:1rem 0 0.5rem">Share event</h3>
-            <label><input type="checkbox" id="plat-share-ev" /> Bật đua top share</label>
-            <div class="row">
-              <div><label>Bắt đầu</label><input id="plat-share-start" type="datetime-local" /></div>
-              <div><label>Kết thúc</label><input id="plat-share-end" type="datetime-local" /></div>
-            </div>
-            <div class="plat-actions">
-              <button type="button" class="primary" onclick="PlatformAdmin.save()">Lưu cấu hình</button>
-              <button type="button" class="secondary" onclick="PlatformAdmin.downloadBackup()">Tải ZIP</button>
-              <button type="button" class="secondary" onclick="PlatformAdmin.runBackup()">Backup ngay</button>
-              <button type="button" class="secondary" onclick="PlatformAdmin.runRollup()">Rollup tháng</button>
-              <button type="button" class="secondary" onclick="PlatformAdmin.recheckAds()">Recheck ads</button>
-              <button type="button" class="secondary" onclick="PlatformAdmin.restartBot(null)">Restart all bots</button>
+      <div class="rp-app">
+        <aside class="rp-sidebar">
+          <div class="rp-brand">
+            <div class="rp-brand-mark">
+              <div class="rp-brand-icon">◈</div>
+              <div>
+                <h2>Research Platform</h2>
+                <p>Clender × Upbain v2</p>
+              </div>
             </div>
           </div>
-        </div>
+          <nav class="rp-nav">
+            <button type="button" class="rp-nav-item active" data-plat="overview"><span class="ico">📊</span> Tổng quan</button>
+            <button type="button" class="rp-nav-item" data-plat="cfg"><span class="ico">⚙️</span> Cấu hình</button>
+            <button type="button" class="rp-nav-item" data-plat="bots"><span class="ico">🤖</span> Bots (10)</button>
+            <button type="button" class="rp-nav-item" data-plat="archive"><span class="ico">📅</span> Archive</button>
+            <button type="button" class="rp-nav-item" data-plat="vip"><span class="ico">⭐</span> VIP & Stars</button>
+            <button type="button" class="rp-nav-item" data-plat="gift"><span class="ico">🎁</span> Giftcode</button>
+            <button type="button" class="rp-nav-item" data-plat="ads"><span class="ico">📢</span> Ads</button>
+            <button type="button" class="rp-nav-item" data-plat="contrib"><span class="ico">💡</span> Đóng góp <span class="rp-nav-badge" id="plat-contrib-badge" style="display:none">0</span></button>
+            <button type="button" class="rp-nav-item" data-plat="share"><span class="ico">🏆</span> Share</button>
+            <button type="button" class="rp-nav-item" data-plat="users"><span class="ico">👥</span> Users</button>
+            <button type="button" class="rp-nav-item" data-plat="rollup"><span class="ico">📋</span> Rollup</button>
+          </nav>
+          <div class="rp-sidebar-foot">
+            <div class="rp-status-pill" id="plat-enabled-pill"><span class="dot"></span> Platform tắt</div>
+            <button type="button" class="rp-btn-save" onclick="PlatformAdmin.save()">💾 Lưu thay đổi</button>
+          </div>
+        </aside>
 
-        <div id="plat-pane-bots" class="plat-pane">
-          <div class="card">
-            <h2>Bots delivery (tối đa 10)</h2>
-            <p class="hint">Mỗi bot = 1 nguồn forum/topic · queue_order = thứ tự chạy auto</p>
-            <div id="plat-bots-list"></div>
-            <div class="plat-actions">
-              <button type="button" class="secondary" onclick="PlatformAdmin.addBot()">+ Thêm bot</button>
-              <button type="button" class="primary" onclick="PlatformAdmin.save()">Lưu bots</button>
+        <div class="rp-main">
+          <header class="rp-topbar">
+            <div>
+              <h1 id="rp-page-title">Tổng quan</h1>
+              <p id="rp-page-desc">Trạng thái hệ thống Research Platform</p>
             </div>
-          </div>
-        </div>
+            <div class="rp-topbar-actions" id="rp-topbar-actions"></div>
+          </header>
 
-        <div id="plat-pane-archive" class="plat-pane">
-          <div class="card">
-            <h2>Archive theo ngày (VN)</h2>
-            <div id="plat-days-table"><p class="hint">Chưa có ngày.</p></div>
-            <div id="plat-day-detail" class="plat-day-detail"></div>
-          </div>
-        </div>
+          <div class="rp-stats" id="plat-stats"></div>
 
-        <div id="plat-pane-vip" class="plat-pane">
-          <div class="card">
-            <h2>VIP plans & Stars</h2>
-            <div id="plat-vip-plans"></div>
-            <h3 style="font-size:0.9rem;margin-top:1rem">Tạo plan mới</h3>
-            <div class="row">
-              <div><label>Loại</label><select id="plat-vip-type"><option value="day">day</option><option value="month">month</option><option value="year">year</option><option value="lifetime">lifetime</option></select></div>
-              <div><label>Tên</label><input id="plat-vip-name" placeholder="VIP tháng" /></div>
-              <div><label>Stars</label><input id="plat-vip-stars" type="number" value="100" /></div>
-              <div><label>Ngày (trừ lifetime)</label><input id="plat-vip-days" type="number" placeholder="30" /></div>
+          <div class="rp-content">
+            <!-- Overview -->
+            <div id="plat-pane-overview" class="rp-pane active">
+              <div class="rp-overview-grid" id="plat-overview-actions"></div>
+              <div class="rp-card" style="margin-top:1rem">
+                <div class="rp-card-title">3 lớp kiến trúc</div>
+                <div class="rp-layers-viz" id="plat-layers-viz"></div>
+                <p class="rp-hint">Up kênh → Archive index → Bot delivery — bật/tắt độc lập trong Cấu hình</p>
+              </div>
+              <div class="rp-card">
+                <div class="rp-card-title">Bot delivery status</div>
+                <div id="plat-overview-bots"></div>
+              </div>
             </div>
-            <button type="button" class="secondary" onclick="PlatformAdmin.createVipPlan()">Tạo plan</button>
-            <h3 style="font-size:0.9rem;margin-top:1rem">Gán VIP tay</h3>
-            <div class="row">
-              <div><label>User ID</label><input id="plat-vip-uid" type="number" /></div>
-              <div><label>Plan ID</label><input id="plat-vip-planid" type="number" /></div>
+
+            <!-- Config -->
+            <div id="plat-pane-cfg" class="rp-pane">
+              <div class="rp-card">
+                <div class="rp-section">
+                  <h3>Bật / Tắt</h3>
+                  <div class="rp-toggle-row">
+                    <label class="rp-toggle"><input type="checkbox" id="plat-enabled" /> Research Platform</label>
+                    <label class="rp-toggle"><input type="checkbox" id="plat-orchestrator" checked /> Orchestrator queue</label>
+                    <label class="rp-toggle"><input type="checkbox" id="plat-channel-first" checked /> Kênh trước → bot sau</label>
+                  </div>
+                </div>
+                <div class="rp-section">
+                  <h3>3 lớp global</h3>
+                  <div class="rp-toggle-row">
+                    <label class="rp-toggle"><input type="checkbox" id="plat-publish" /> Up kênh</label>
+                    <label class="rp-toggle"><input type="checkbox" id="plat-index" /> Archive index</label>
+                    <label class="rp-toggle"><input type="checkbox" id="plat-delivery" /> Bot delivery</label>
+                  </div>
+                </div>
+                <div class="rp-section">
+                  <h3>Quyền & Publish</h3>
+                  <div class="rp-toggle-row">
+                    <label class="rp-toggle"><input type="checkbox" id="plat-vip-req" /> Bắt buộc VIP</label>
+                    <label class="rp-toggle"><input type="checkbox" id="plat-auto-pub" checked /> Tự publish sau index</label>
+                  </div>
+                  <div class="rp-grid" style="margin-top:0.75rem">
+                    <div><label class="rp-label">Delay gửi (giây)</label><input id="plat-delay" type="number" step="0.5" min="0.5" value="1" /></div>
+                    <div><label class="rp-label">Notify group ID</label><input id="plat-notify-group" type="number" placeholder="-100..." /></div>
+                  </div>
+                </div>
+                <div class="rp-section">
+                  <h3>Forum admin</h3>
+                  <div class="rp-grid">
+                    <div><label class="rp-label">Admin forum</label><input id="plat-admin-forum" type="number" /></div>
+                    <div><label class="rp-label">Topic ZIP</label><input id="plat-zip-topic" type="number" /></div>
+                    <div><label class="rp-label">Topic duyệt tên</label><input id="plat-contrib-topic" type="number" /></div>
+                  </div>
+                </div>
+                <div class="rp-section">
+                  <h3>Membership (Clender)</h3>
+                  <div class="rp-grid">
+                    <div><label class="rp-label">Channel ID</label><input id="plat-mem-ch" type="number" /></div>
+                    <div><label class="rp-label">@username</label><input id="plat-mem-un" placeholder="mychannel" /></div>
+                    <div><label class="rp-label">Cache TTL (giây)</label><input id="plat-mem-sec" type="number" min="60" value="300" /></div>
+                  </div>
+                  <label class="rp-label" style="margin-top:0.5rem">Force-join message</label>
+                  <textarea id="plat-mem-msg" rows="2"></textarea>
+                </div>
+                <div class="rp-section">
+                  <h3>Backup</h3>
+                  <div class="rp-grid">
+                    <div><label class="rp-label">Backup forum</label><input id="plat-backup-forum" type="number" /></div>
+                    <div><label class="rp-label">Interval (giờ)</label><input id="plat-backup-hours" type="number" min="1" value="24" /></div>
+                    <div><label class="rp-label">Giữ (ngày)</label><input id="plat-backup-keep" type="number" min="1" value="7" /></div>
+                  </div>
+                  <label class="rp-toggle" style="margin-top:0.5rem"><input type="checkbox" id="plat-backup-tg" checked /> Gửi ZIP lên Telegram</label>
+                  <p class="rp-hint" id="plat-backup-status" style="margin-top:0.5rem">Backup: —</p>
+                </div>
+                <div class="rp-section">
+                  <h3>Share event</h3>
+                  <label class="rp-toggle"><input type="checkbox" id="plat-share-ev" /> Bật đua top</label>
+                  <div class="rp-grid" style="margin-top:0.75rem">
+                    <div><label class="rp-label">Bắt đầu</label><input id="plat-share-start" type="datetime-local" /></div>
+                    <div><label class="rp-label">Kết thúc</label><input id="plat-share-end" type="datetime-local" /></div>
+                  </div>
+                </div>
+                <div class="rp-actions">
+                  <button type="button" class="rp-btn rp-btn-primary" onclick="PlatformAdmin.save()">Lưu cấu hình</button>
+                  <button type="button" class="rp-btn" onclick="PlatformAdmin.runBackup()">Backup ngay</button>
+                  <button type="button" class="rp-btn" onclick="PlatformAdmin.downloadBackup()">Tải ZIP</button>
+                  <button type="button" class="rp-btn" onclick="PlatformAdmin.recheckAds()">Recheck ads</button>
+                  <button type="button" class="rp-btn" onclick="PlatformAdmin.restartBot(null)">Restart bots</button>
+                </div>
+              </div>
             </div>
-            <button type="button" class="secondary" onclick="PlatformAdmin.grantVip()">Gán VIP</button>
-          </div>
-        </div>
 
-        <div id="plat-pane-gift" class="plat-pane">
-          <div class="card">
-            <h2>Giftcode</h2>
-            <div class="row">
-              <div><label>Plan ID</label><input id="plat-gift-plan" type="number" value="1" /></div>
-              <div><label>Số lượng</label><input id="plat-gift-count" type="number" value="5" /></div>
-              <div><label>Prefix</label><input id="plat-gift-prefix" placeholder="VIP" /></div>
+            <!-- Bots -->
+            <div id="plat-pane-bots" class="rp-pane">
+              <div class="rp-card">
+                <div class="rp-card-title">Bots delivery</div>
+                <p class="rp-card-desc">Tối đa 10 bot · mỗi bot = 1 forum/topic nguồn · queue_order = thứ tự auto</p>
+                <div id="plat-bots-list"></div>
+                <div class="rp-actions">
+                  <button type="button" class="rp-btn" onclick="PlatformAdmin.addBot()">+ Thêm bot</button>
+                  <button type="button" class="rp-btn rp-btn-primary" onclick="PlatformAdmin.save()">Lưu bots</button>
+                </div>
+              </div>
             </div>
-            <button type="button" class="primary" onclick="PlatformAdmin.createGiftCodes()">Tạo batch</button>
-            <div id="plat-gift-list" style="margin-top:1rem"></div>
-          </div>
-        </div>
 
-        <div id="plat-pane-ads" class="plat-pane">
-          <div class="card">
-            <h2>Ads contracts</h2>
-            <div class="row">
-              <div><label>Alias</label><input id="plat-ads-alias" /></div>
-              <div><label>Msg IDs (csv)</label><input id="plat-ads-ids" placeholder="123,456" /></div>
-              <div><label>Chat ID</label><input id="plat-ads-chat" type="number" /></div>
+            <!-- Archive -->
+            <div id="plat-pane-archive" class="rp-pane">
+              <div class="rp-archive-split">
+                <div class="rp-card" style="margin:0">
+                  <div class="rp-card-title">Ngày archive (VN)</div>
+                  <div id="plat-days-table" class="rp-table-wrap"><p class="rp-hint">Chưa có ngày.</p></div>
+                </div>
+                <div class="rp-card" style="margin:0">
+                  <div class="rp-card-title">Sequence items</div>
+                  <div id="plat-day-detail" class="rp-day-detail"><p class="rp-empty"><div class="ico">📋</div>Chọn ngày bên trái</p></div>
+                </div>
+              </div>
             </div>
-            <button type="button" class="primary" onclick="PlatformAdmin.saveAdsAlias()">Lưu alias</button>
-            <div id="plat-ads-list" style="margin-top:1rem"></div>
-          </div>
-        </div>
 
-        <div id="plat-pane-contrib" class="plat-pane">
-          <div class="card">
-            <h2>Đóng góp tên bộ media</h2>
-            <div id="plat-contrib-list"><p class="hint">Đang tải…</p></div>
-          </div>
-        </div>
+            <!-- VIP -->
+            <div id="plat-pane-vip" class="rp-pane">
+              <div class="rp-card">
+                <div class="rp-card-title">VIP Plans</div>
+                <div id="plat-vip-plans"></div>
+              </div>
+              <div class="rp-card">
+                <div class="rp-card-title">Tạo plan mới</div>
+                <div class="rp-grid">
+                  <div><label class="rp-label">Loại</label><select id="plat-vip-type"><option value="day">Ngày</option><option value="month">Tháng</option><option value="year">Năm</option><option value="lifetime">Vĩnh viễn</option></select></div>
+                  <div><label class="rp-label">Tên</label><input id="plat-vip-name" placeholder="VIP tháng" /></div>
+                  <div><label class="rp-label">Giá Stars</label><input id="plat-vip-stars" type="number" value="100" /></div>
+                  <div><label class="rp-label">Số ngày</label><input id="plat-vip-days" type="number" placeholder="30" /></div>
+                </div>
+                <button type="button" class="rp-btn rp-btn-primary" style="margin-top:0.75rem" onclick="PlatformAdmin.createVipPlan()">Tạo plan</button>
+              </div>
+              <div class="rp-card">
+                <div class="rp-card-title">Gán VIP thủ công</div>
+                <div class="rp-grid">
+                  <div><label class="rp-label">User ID</label><input id="plat-vip-uid" type="number" /></div>
+                  <div><label class="rp-label">Plan ID</label><input id="plat-vip-planid" type="number" /></div>
+                </div>
+                <button type="button" class="rp-btn" style="margin-top:0.75rem" onclick="PlatformAdmin.grantVip()">Gán VIP</button>
+              </div>
+            </div>
 
-        <div id="plat-pane-share" class="plat-pane">
-          <div class="card">
-            <h2>Share leaderboard</h2>
-            <div id="plat-share-lb"></div>
-          </div>
-        </div>
+            <!-- Gift -->
+            <div id="plat-pane-gift" class="rp-pane">
+              <div class="rp-card">
+                <div class="rp-card-title">Tạo giftcode batch</div>
+                <div class="rp-grid">
+                  <div><label class="rp-label">Plan ID</label><input id="plat-gift-plan" type="number" value="1" /></div>
+                  <div><label class="rp-label">Số lượng</label><input id="plat-gift-count" type="number" value="5" /></div>
+                  <div><label class="rp-label">Prefix</label><input id="plat-gift-prefix" placeholder="VIP" /></div>
+                </div>
+                <button type="button" class="rp-btn rp-btn-primary" style="margin-top:0.75rem" onclick="PlatformAdmin.createGiftCodes()">Tạo mã</button>
+                <div id="plat-gift-list" style="margin-top:1rem"></div>
+              </div>
+            </div>
 
-        <div id="plat-pane-users" class="plat-pane">
-          <div class="card">
-            <h2>Users</h2>
-            <div id="plat-users-table"></div>
-          </div>
-        </div>
+            <!-- Ads -->
+            <div id="plat-pane-ads" class="rp-pane">
+              <div class="rp-card">
+                <div class="rp-card-title">Ads contract mới</div>
+                <div class="rp-grid">
+                  <div><label class="rp-label">Alias</label><input id="plat-ads-alias" /></div>
+                  <div><label class="rp-label">Msg IDs (csv)</label><input id="plat-ads-ids" placeholder="123,456" /></div>
+                  <div><label class="rp-label">Chat ID</label><input id="plat-ads-chat" type="number" /></div>
+                </div>
+                <button type="button" class="rp-btn rp-btn-primary" style="margin-top:0.75rem" onclick="PlatformAdmin.saveAdsAlias()">Lưu alias</button>
+                <div id="plat-ads-list" style="margin-top:1rem"></div>
+              </div>
+            </div>
 
-        <div id="plat-pane-rollup" class="plat-pane">
-          <div class="card">
-            <h2>Rollup 30 ngày</h2>
-            <div id="plat-rollup-list"></div>
-            <button type="button" class="secondary" style="margin-top:0.75rem" onclick="PlatformAdmin.runRollup()">Chạy rollup tháng</button>
+            <!-- Contrib -->
+            <div id="plat-pane-contrib" class="rp-pane">
+              <div class="rp-card">
+                <div class="rp-card-title">Đóng góp tên bộ media</div>
+                <div id="plat-contrib-list"><p class="rp-hint">Đang tải…</p></div>
+              </div>
+            </div>
+
+            <!-- Share -->
+            <div id="plat-pane-share" class="rp-pane">
+              <div class="rp-card">
+                <div class="rp-card-title">Leaderboard đua top</div>
+                <div id="plat-share-lb"></div>
+              </div>
+            </div>
+
+            <!-- Users -->
+            <div id="plat-pane-users" class="rp-pane">
+              <div class="rp-card">
+                <div class="rp-card-title">Danh sách users</div>
+                <div id="plat-users-table" class="rp-table-wrap"></div>
+              </div>
+            </div>
+
+            <!-- Rollup -->
+            <div id="plat-pane-rollup" class="rp-pane">
+              <div class="rp-card">
+                <div class="rp-card-title">Rollup mục lục 30 ngày</div>
+                <div id="plat-rollup-list"></div>
+                <button type="button" class="rp-btn" style="margin-top:0.75rem" onclick="PlatformAdmin.runRollup()">Chạy rollup tháng</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
