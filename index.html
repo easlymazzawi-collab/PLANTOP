@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PlanTop — Sơ đồ luồng Clender × Upbain</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="brand">
+        <span class="brand-icon">◈</span>
+        <div>
+          <h1>PlanTop</h1>
+          <p class="subtitle">Clender × Upbain — Thiết kế hệ thống tool của bạn</p>
+        </div>
+      </div>
+      <div class="toolbar">
+        <div class="custom-idea">
+          <input type="text" id="ideaInput" placeholder="Nhập ý tưởng mới..." maxlength="80" />
+          <button type="button" id="addIdeaBtn" class="btn btn-primary" title="Thêm ý tưởng vào bảng gợi ý">
+            <span>+</span> Thêm ý tưởng
+          </button>
+        </div>
+        <div class="toolbar-actions">
+          <button type="button" id="undoBtn" class="btn btn-ghost" title="Hoàn tác">↩</button>
+          <button type="button" id="zoomOutBtn" class="btn btn-ghost" title="Thu nhỏ">−</button>
+          <span id="zoomLabel" class="zoom-label">100%</span>
+          <button type="button" id="zoomInBtn" class="btn btn-ghost" title="Phóng to">+</button>
+          <button type="button" id="fitBtn" class="btn btn-ghost" title="Vừa khung">⊡</button>
+          <span class="divider"></span>
+          <button type="button" id="saveBtn" class="btn btn-secondary">Lưu</button>
+          <button type="button" id="loadBtn" class="btn btn-secondary">Tải</button>
+          <button type="button" id="exportBtn" class="btn btn-secondary">Xuất JSON</button>
+          <button type="button" id="importBtn" class="btn btn-secondary">Nhập JSON</button>
+          <input type="file" id="importFile" accept=".json" hidden />
+          <button type="button" id="clearBtn" class="btn btn-danger">Xóa hết</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="main">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+          <div class="section-header clender">
+            <span class="section-dot"></span>
+            <h2>Clender</h2>
+            <span class="section-tag">Lịch & Kế hoạch</span>
+          </div>
+          <p class="section-desc">Module thời gian, lịch trình và deadline</p>
+          <div class="palette" id="paletteClender"></div>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="section-header upbain">
+            <span class="section-dot"></span>
+            <h2>Upbain</h2>
+            <span class="section-tag">Ý tưởng & Sáng tạo</span>
+          </div>
+          <p class="section-desc">Module brainstorm, ghi chú và mục tiêu</p>
+          <div class="palette" id="paletteUpbain"></div>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="section-header custom">
+            <span class="section-dot"></span>
+            <h2>Ý tưởng của bạn</h2>
+          </div>
+          <p class="section-desc">Kéo thả các ý tưởng tự tạo vào sơ đồ</p>
+          <div class="palette" id="paletteCustom">
+            <p class="empty-hint" id="customEmpty">Chưa có ý tưởng — nhập ở thanh trên</p>
+          </div>
+        </div>
+
+        <div class="sidebar-help">
+          <h3>Hướng dẫn</h3>
+          <ul>
+            <li>Kéo block từ đây vào canvas</li>
+            <li>Nối: click cổng <strong>ra</strong> → click cổng <strong>vào</strong></li>
+            <li>Double-click node để sửa tên</li>
+            <li>Chọn node + <kbd>Del</kbd> để xóa</li>
+            <li>Giữ chuột giữa / Space + kéo để di chuyển canvas</li>
+          </ul>
+        </div>
+      </aside>
+
+      <div class="canvas-wrap" id="canvasWrap">
+        <div class="canvas-viewport" id="viewport">
+          <svg class="connections-layer" id="connectionsSvg">
+            <defs>
+              <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                <polygon points="0 0, 8 3, 0 6" fill="var(--conn-color)" />
+              </marker>
+            </defs>
+          </svg>
+          <div class="nodes-layer" id="nodesLayer"></div>
+          <div class="canvas-hint" id="canvasHint">
+            <div class="hint-card">
+              <span class="hint-icon">◇</span>
+              <h3>Bắt đầu thiết kế hệ thống</h3>
+              <p>Kéo các module Clender & Upbain từ bên trái, nối chúng thành luồng làm việc của bạn.</p>
+            </div>
+          </div>
+        </div>
+        <div class="connecting-line" id="connectingLine" hidden></div>
+      </div>
+
+      <aside class="inspector" id="inspector">
+        <h3>Chi tiết node</h3>
+        <div id="inspectorEmpty" class="inspector-empty">
+          <p>Chọn một node trên canvas để xem và chỉnh sửa</p>
+        </div>
+        <div id="inspectorContent" class="inspector-content" hidden>
+          <label>
+            Tên
+            <input type="text" id="inspectorLabel" />
+          </label>
+          <label>
+            Mô tả
+            <textarea id="inspectorDesc" rows="3" placeholder="Ghi chú cho module này..."></textarea>
+          </label>
+          <div class="inspector-meta">
+            <span id="inspectorSource"></span>
+            <span id="inspectorType"></span>
+          </div>
+          <button type="button" id="deleteNodeBtn" class="btn btn-danger btn-block">Xóa node</button>
+        </div>
+
+        <div class="system-summary">
+          <h3>Tổng quan hệ thống</h3>
+          <div class="stats">
+            <div class="stat"><span id="statNodes">0</span> nodes</div>
+            <div class="stat"><span id="statConns">0</span> kết nối</div>
+          </div>
+          <pre id="flowSummary" class="flow-summary"></pre>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
