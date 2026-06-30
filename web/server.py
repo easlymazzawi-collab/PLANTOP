@@ -343,14 +343,30 @@ def _snapshot() -> dict[str, Any]:
     safe_plat["bot"] = legacy
     platform_days: list = []
     bot_status_list: list = []
+    platform_queue: dict = {}
+    platform_stats: dict = {}
     try:
         from research_platform.archive_index import list_days, sync_all_bots_from_config
         from research_platform.bot_manager import bot_status
+        from research_platform.run_queue import queue_status
 
+        platform_queue = queue_status()
         if plat.get("enabled"):
             sync_all_bots_from_config(plat)
-            platform_days = list_days(limit=30)
+            platform_days = list_days(limit=60)
             bot_status_list = bot_status()
+            try:
+                from research_platform.catalog import list_pending_contributions
+                pending = list_pending_contributions(limit=100)
+                platform_stats = {
+                    "days_count": len(platform_days),
+                    "bots_online": sum(1 for b in bot_status_list if b.get("running")),
+                    "bots_total": len(bot_status_list),
+                    "pending_contributions": len(pending),
+                    "queue_running": bool(platform_queue.get("running")),
+                }
+            except Exception:
+                platform_stats = {"days_count": len(platform_days)}
     except Exception:
         pass
     return {
@@ -390,6 +406,8 @@ def _snapshot() -> dict[str, Any]:
         },
         "platform_days": platform_days,
         "platform_bot_status": bot_status_list,
+        "platform_queue": platform_queue,
+        "platform_stats": platform_stats,
         "ts": int(time.time()),
     }
 
@@ -1057,24 +1075,46 @@ def _mask_platform(cfg: dict) -> dict:
 
 @app.get("/api/platform")
 async def get_platform(_=Depends(_auth)):
-    from research_platform.config import load_platform_config, mask_bots_for_api, list_bots_config
-    from research_platform.archive_index import list_days, sync_all_bots_from_config
+    from research_platform.config import load_platform_config, list_bots_config
+    from research_platform.archive_index import list_days, sync_all_bots_from_config, list_users
     from research_platform.bot_manager import bot_status
+    from research_platform.run_queue import queue_status
+    from research_platform.catalog import list_pending_contributions
+    from research_platform.rollup import list_rollups
 
     plat = load_platform_config()
-    days = []
+    days: list = []
+    pending: list = []
+    rollups: list = []
+    users_count = 0
     if plat.get("enabled"):
         try:
             sync_all_bots_from_config(plat)
-            days = list_days(limit=60)
+            days = list_days(limit=90)
+            pending = list_pending_contributions(limit=50)
+            rollups = list_rollups()
+            users_count = len(list_users(limit=500))
         except Exception:
             pass
     safe = _mask_platform({"platform": plat})["platform"]
+    bstat = bot_status()
+    queue = queue_status()
     return {
         "platform": safe,
         "days": days,
-        "bot_status": bot_status(),
-        "queue": __import__("research_platform.run_queue", fromlist=["queue_status"]).queue_status(),
+        "bot_status": bstat,
+        "queue": queue,
+        "stats": {
+            "days_count": len(days),
+            "bots_configured": len(list_bots_config(plat)),
+            "bots_online": sum(1 for b in bstat if b.get("running")),
+            "pending_contributions": len(pending),
+            "users_count": users_count,
+            "rollup_count": len(rollups),
+            "queue_running": bool(queue.get("running")),
+        },
+        "pending_contributions": pending,
+        "rollups": rollups,
     }
 
 
@@ -1122,12 +1162,23 @@ async def patch_platform(body: PlatformIn, _=Depends(_auth)):
     return {"ok": True, "platform": _mask_platform({"platform": plat})["platform"]}
 
 
+class RestartBotIn(BaseModel):
+    username: str | None = None
+
+
 @app.post("/api/platform/bots/restart")
-async def platform_restart_bots(username: str | None = None, _=Depends(_auth)):
+async def platform_restart_bots(
+    body: RestartBotIn | None = Body(default=None),
+    username: str | None = None,
+    _=Depends(_auth),
+):
     from research_platform.bot_manager import restart_bot
 
+    uname = username
+    if body and body.username:
+        uname = body.username
     try:
-        r = await restart_bot(username)
+        r = await restart_bot(uname)
     except Exception as e:
         raise HTTPException(500, str(e)) from e
     append_log("info", f"Restart platform bots: {r}")

@@ -1,0 +1,132 @@
+/* Research Platform admin — tab con trong UpBain dashboard */
+#platform.panel { max-width: 1200px; }
+
+.plat-layout { display: flex; flex-direction: column; gap: 1rem; }
+
+.plat-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.6rem;
+}
+.plat-stat {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.65rem 0.85rem;
+}
+.plat-stat .n { font-size: 1.25rem; font-weight: 700; color: var(--accent2); }
+.plat-stat .l { font-size: 0.72rem; color: var(--muted); }
+
+.plat-nav {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+.plat-nav button {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--muted);
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.82rem;
+}
+.plat-nav button.active {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--text);
+}
+.plat-nav button .badge-count {
+  background: var(--danger);
+  color: #fff;
+  font-size: 0.65rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 999px;
+  margin-left: 0.25rem;
+}
+
+.plat-pane { display: none; }
+.plat-pane.active { display: block; }
+
+.plat-bot-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  background: var(--bg);
+}
+.plat-bot-card h4 {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.plat-bot-card .layers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0.5rem 0;
+  font-size: 0.8rem;
+}
+.plat-bot-card .layers label { display: inline-flex; align-items: center; gap: 0.3rem; margin: 0; color: var(--text); }
+
+.plat-status-dot {
+  width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+}
+.plat-status-dot.on { background: var(--accent2); }
+.plat-status-dot.off { background: var(--muted); }
+
+.plat-archive-table { width: 100%; font-size: 0.85rem; }
+.plat-archive-table tr:hover { background: rgba(59,130,246,0.06); }
+.plat-archive-table .status-draft { color: var(--muted); }
+.plat-archive-table .status-indexed { color: var(--warn); }
+.plat-archive-table .status-published { color: var(--accent2); }
+.plat-archive-table .status-closed { color: var(--danger); }
+
+.plat-day-detail {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+.plat-day-detail .item-row {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.8rem;
+  font-family: ui-monospace, monospace;
+}
+.plat-day-detail .item-row .seq { color: var(--accent); min-width: 2rem; }
+.plat-day-detail .item-row .type-ads { color: var(--warn); }
+
+.plat-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.plat-inline-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.plat-contrib-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
